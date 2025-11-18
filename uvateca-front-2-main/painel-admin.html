@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uvateca - Painel Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="index.html" class="logo">Uvateca</a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="categoria.html">Categoria</a></li>
+                <li><a href="about.html">Contato</a></li>
+            </ul>
+        </nav>
+        <div class="user-icon">
+            <a href="#" id="user-icon-btn">
+                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
+            </a> 
+        </div>
+    </header>
+
+    <aside id="user-sidebar" class="sidebar">
+        
+        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
+            <img src="perfil.jpeg" alt="Foto do Perfil">
+            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
+        </div>
+
+        <div id="sidebar-deslogado" class="sidebar-profile">
+            <p class="welcome-msg">Você não está logado.</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
+                
+                <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
+                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>Painel do Administrador</h2>
+            <div class="form-container">
+                <h3>Cadastrar Novo Funcionário</h3>
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cargo">Cargo</label>
+                        <input type="text" id="cargo" name="cargo" placeholder="Ex: Bibliotecário, Editor">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Salvar Funcionário</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>

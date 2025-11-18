@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uvateca - Painel Funcionário</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="index.html" class="logo">Uvateca</a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="categoria.html">Categoria</a></li>
+                <li><a href="about.html">Contato</a></li>
+            </ul>
+        </nav>
+        <div class="user-icon">
+            <a href="#" id="user-icon-btn">
+                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
+            </a> 
+        </div>
+    </header>
+
+    <aside id="user-sidebar" class="sidebar">
+        
+        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
+            <img src="perfil.jpeg" alt="Foto do Perfil">
+            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
+        </div>
+
+        <div id="sidebar-deslogado" class="sidebar-profile">
+            <p class="welcome-msg">Você não está logado.</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
+                
+                <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
+                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>Painel do Funcionário</h2>
+            <div class="form-container">
+                <h3>Cadastrar Novo Livro</h3>
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="titulo">Título</label>
+                        <input type="text" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="autor">Autor</label>
+                        <input type="text" id="autor" name="autor" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoria</label>
+                        <select id="categoria" name="categoria">
+                            <option value="ficcao">Ficção Científica</option>
+                            <option value="fantasia">Fantasia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="capa">Capa (Upload Fictício)</label>
+                        <input type="file" id="capa" name="capa">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Salvar Livro</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
