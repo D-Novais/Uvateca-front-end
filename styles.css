@@ -1,0 +1,735 @@
+/* === CONFIGURAÇÃO GLOBAL E VARIÁVEIS === */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;700&display=swap');
+
+:root {
+    --color-de-fundo-principal: #0d0149;
+    --cor-de-texto: #ffffff;
+    --botao-cor: #eadcd8;
+    --botao-cor-secundaria: #ff3a54;
+    --cor-objeto: #4b0080; /* Usado no header e cards */
+    --font-family: "Be Vietnam Pro", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-de-fundo-principal);
+    color: var(--cor-de-texto);
+    padding-top: 80px; 
+}
+
+a {
+    text-decoration: none;
+    color: var(--cor-de-texto);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--botao-cor);
+}
+
+ul {
+    list-style: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+h1, h2, h3 {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+/* === CABEÇALHO (HEADER) === */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--cor-objeto);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+.logo:hover {
+    color: var(--cor-de-texto); /* Força o logo a ficar branco no hover */
+    transform: none; /* Garante que ele não tenha o 'scale' do outro hover */
+}
+
+.main-nav ul {
+    display: flex;
+    gap: 2rem;
+}
+
+.main-nav a {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem;
+}
+.main-nav a:hover {
+    color: var(--botao-cor-secundaria); /* O seu "vermelho" (#ff3a54) */
+    transform: scale(1.1); /* Bônus: um leve zoom para dar ênfase */
+}
+.user-icon a {
+    font-size: 1.5rem; /* Placeholder para um ícone */
+}
+
+/* === BOTÕES (PADRÃO UVATECA) === */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-family: var(--font-family);
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--botao-cor);
+    color: var(--color-de-fundo-principal);
+}
+
+.btn-primary:hover {
+    background-color: var(--cor-de-texto);
+    color: var(--color-de-fundo-principal);
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background-color: var(--botao-cor-secundaria);
+    color: var(--cor-de-texto);
+}
+
+.btn-secondary:hover {
+    background-color: #ff1a3c;
+    color: var(--cor-de-texto);
+    transform: scale(1.05);
+}
+
+.btn-full-width {
+    width: 100%;
+    text-align: center;
+}
+
+/* === PÁGINA INICIAL (INDEX) - GRID DE LIVROS === */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.book-card {
+    background-color: var(--cor-objeto);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.book-card img {
+    width: 100%;
+    height: 400px; 
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 1.5rem;
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+}
+
+.card-content h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-content .category {
+    font-style: italic;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+}
+
+/* === FORMULÁRIOS (LOGIN & PAINÉIS) === */
+.form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background-color: var(--cor-objeto);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: var(--color-de-fundo-principal);
+    font-family: var(--font-family);
+    font-size: 1rem;
+}
+
+.form-container .btn {
+    width: 100%; 
+    margin-top: 1rem;
+}
+
+.form-container .form-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--botao-cor);
+}
+
+/* === PÁGINA CATEGORIA (FILTROS) === */
+.filter-section {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+
+.filter-sidebar {
+    background-color: var(--cor-objeto);
+    padding: 1.5rem;
+    border-radius: 10px;
+    height: fit-content;
+}
+
+.filter-sidebar h3 {
+    border-bottom: 2px solid var(--color-de-fundo-principal);
+    padding-bottom: 0.5rem;
+}
+
+/* === CAIXA DE CONTEÚDO (PARA PÁGINAS 'SOBRE') === */
+.content-box {
+    background-color: var(--cor-objeto); /* O roxo sólido */
+    padding: 2.5rem; /* Espaçamento interno */
+    border-radius: 10px; /* Cantos arredondados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+.content-box p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+.content-box p:last-child {
+    margin-bottom: 0;
+}
+
+/* === PÁGINA DETALHE-LIVRO === */
+.book-detail-page {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+.book-detail-cover img {
+    max-width: 300px; /* Largura da capa */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.book-detail-content {
+    flex: 1; /* Ocupa o resto do espaço */
+}
+
+.book-detail-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.book-detail-content .category-detail {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+}
+
+.book-sinopse h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-bottom: 1px solid var(--cor-objeto);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.book-sinopse p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.interaction-box {
+    background-color: var(--cor-objeto); /* Roxo do header */
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.interaction-box .quantity {
+    font-size: 1.2rem;
+    font-weight: 700;
+    background-color: var(--color-de-fundo-principal);
+    padding: 0.25rem 0.75rem;
+    border-radius: 5px;
+}
+
+.back-button-container {
+    margin-top: 2rem;
+}
+
+/* === PÁGINA ALUGADOS === */
+.rented-book-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espaço entre os livros */
+}
+
+.rented-book-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--cor-objeto); /* Roxo dos cards */
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* Linhas para fazer o card inteiro ser um link clicável */
+    text-decoration: none; /* Remove o sublinhado do link */
+    color: var(--cor-de-texto); /* Garante que o texto seja branco */
+}
+
+.rented-book-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.rented-book-cover img {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 1.5rem;
+}
+
+.rented-book-info h3 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.rented-book-info .due-date {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Lógica das Cores de Status */
+.rented-book-item.status-ontime .due-date {
+    color: var(--cor-de-texto);
+}
+.rented-book-item.status-overdue .due-date {
+    color: var(--botao-cor-secundaria);
+}
+.rented-book-item.status-returned .due-date {
+    color: #00e676; /* Um verde vibrante */
+}
+
+/* === PÁGINA DETALHE DO ALUGUEL (NOVO) === */
+.rental-detail-page {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+.rental-detail-cover {
+    width: 300px;
+}
+
+.rental-detail-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.rental-detail-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.rental-detail-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.rental-detail-content .sinopse {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #ddd;
+    margin-bottom: 1.5rem;
+    flex-grow: 1; /* Empurra o status-box para baixo */
+}
+
+.status-box {
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.status-box.status-ontime {
+    background-color: var(--color-de-fundo-principal);
+    border: 2px solid var(--botao-cor); /* Borda Bege */
+    color: var(--botao-cor);
+}
+
+.status-box.status-returned {
+    background-color: #083823; /* Fundo Verde Escuro */
+    border: 2px solid #00e676; /* Borda Verde Clara */
+    color: #00e676; /* Verde Claro */
+}
+
+/* --- Layout de MULTA (Atrasado) --- */
+.rental-overdue-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza verticalmente */
+    gap: 2rem;
+}
+
+.overdue-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.overdue-text {
+    border: 2px solid var(--cor-de-texto); /* Borda branca */
+    padding: 1.2rem;
+    border-radius: 8px;
+    flex: 1;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.overdue-box {
+    background-color: var(--botao-cor); /* Caixa Bege (do seu design) */
+    color: var(--color-de-fundo-principal); /* Texto Roxo (do seu design) */
+    padding: 1.2rem 1.8rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.rental-overdue-content .btn {
+    margin-top: 2rem;
+}
+
+
+/* === SIDEBAR DO USUÁRIO === */
+/* === SIDEBAR DO USUÁRIO (COM PERFIL) === */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px; 
+    height: 100%;
+    background-color: var(--cor-objeto);
+    z-index: 1100; 
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.active {
+    transform: translateX(0);
+}
+
+/* NOVO: Container do perfil */
+.sidebar-profile {
+    padding: 2.5rem 2rem 1.5rem 2rem; /* Espaçamento do perfil */
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Linha divisória sutil */
+}
+
+.sidebar-profile img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%; /* Deixa a imagem redonda */
+    border: 3px solid var(--botao-cor); /* Borda bege */
+    margin-bottom: 1rem;
+}
+
+.sidebar-profile .welcome-msg {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--cor-de-texto);
+}
+
+/* Ajuste no padding da navegação */
+.sidebar-nav {
+    padding: 0; /* Remove o padding antigo */
+}
+
+.sidebar-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem; /* Adiciona o padding aqui, abaixo do perfil */
+}
+
+.sidebar-nav a {
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 0.5rem;
+}
+
+.sidebar-nav a:hover {
+    color: var(--botao-cor-secundaria);
+}
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+    .main-header {
+        flex-direction: column;
+        padding: 1rem;
+        padding-top: 130px; 
+    }
+
+    body {
+        padding-top: 130px; 
+    }
+
+    .main-nav ul {
+        margin-top: 1rem;
+        gap: 1rem;
+    }
+
+    .filter-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .book-detail-page {
+        flex-direction: column;
+        align-items: center;
+    }
+    .book-detail-cover img {
+        max-width: 280px;
+        margin-bottom: 1rem;
+    }
+    .book-detail-content {
+        width: 100%;
+    }
+
+    .rental-detail-page {
+        flex-direction: column;
+        align-items: center;
+    }
+    .rental-detail-cover {
+        width: 100%;
+        max-width: 300px;
+    }
+    .rental-detail-content {
+        width: 100%;
+    }
+    
+    .rented-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .overdue-row {
+        flex-direction: column;
+    }
+}
+
+/* === PÁGINA MINHA BIBLIOTECA (LISTA DE SALVOS) === */
+
+.saved-book-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espaço entre os itens da lista */
+}
+
+.saved-book-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--cor-objeto); /* Roxo dos cards */
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    gap: 1.5rem;
+}
+
+.saved-book-cover img {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.saved-book-info {
+    flex-grow: 1; /* Ocupa o espaço */
+}
+
+.saved-book-info h3 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.saved-book-info .category {
+    font-style: italic;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.saved-book-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Oculta o botão 'Ver Página' em telas pequenas para simplificar */
+@media (max-width: 768px) {
+    .saved-book-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .saved-book-actions {
+        width: 100%;
+        flex-direction: row;
+    }
+    .saved-book-actions .btn {
+        width: 100%;
+    }
+}
+/* Estilo para o novo ícone do menu de usuário */
+.user-icon .user-icon-img {
+    width: 30px; /* Define um tamanho fixo */
+    height: 30px;
+    object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+    vertical-align: middle; /* Alinha melhor com os links */
+}
+/* === LAYOUT DASHBOARD ADMIN === */
+
+/* === LAYOUT DASHBOARD ADMIN (COM ABAS) === */
+
+.dashboard-controls {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--cor-objeto);
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.dashboard-tab {
+    background-color: transparent;
+    color: var(--cor-de-texto);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 8px 8px 0 0;
+}
+
+.dashboard-tab:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-tab.active {
+    background-color: var(--cor-objeto);
+    font-weight: 700;
+    border: 2px solid var(--cor-objeto);
+    border-bottom: none;
+    color: var(--botao-cor); /* Cor bege para destaque */
+}
+
+/* Painéis de conteúdo */
+.dashboard-pane {
+    display: none; /* Esconde todos os painéis por padrão */
+    background-color: var(--cor-objeto);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-pane.active {
+    display: block; /* Mostra apenas o painel ativo */
+}
+
+.dashboard-pane h3 {
+    font-size: 1.5rem;
+    color: var(--botao-cor);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ... dentro da seção de Dashboard ... */
+
+.dashboard-pane iframe {
+    width: 100%;
+    /* Altura MAIOR (Ajustado de 600px para 750px) */
+    height: 750px; 
+    border-radius: 8px;
+    margin-top: 1rem;
+}

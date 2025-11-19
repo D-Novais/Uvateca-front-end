@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uvateca - Aluguel Devolvido</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo">Uvateca</a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="categoria.html">Categoria</a></li>
+                <li><a href="about.html">Contato</a></li>
+            </ul>
+        </nav>
+        <div class="user-icon">
+            <a href="#" id="user-icon-btn">
+                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
+            </a> 
+        </div>
+    </header>
+   <aside id="user-sidebar" class="sidebar">
+        
+        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
+            <img src="perfil.jpeg" alt="Foto do Perfil">
+            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
+        </div>
+
+        <div id="sidebar-deslogado" class="sidebar-profile">
+            <p class="welcome-msg">Você não está logado.</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
+                
+                <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
+                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <section class="rental-detail-page">
+                
+                <div class="rental-detail-cover">
+                    <img src="https://via.placeholder.com/300x450/4B0080/FFFFFF?text=Coraline" alt="Capa Coraline">
+                </div>
+                
+                <div class="rental-detail-content">
+                    <h1>Coraline</h1>
+                    <p class="sinopse">
+                        Quando Coraline encontra uma porta secreta em sua nova casa... 
+                        Ela descobre uma versão alternativa de sua própria vida...
+                    </p>
+
+                    <div class="status-box status-returned">
+                        Devolvido em 13/10/2025
+                    </div>
+                </div>
+
+            </section>
+            
+            <div class="back-button-container">
+                <a href="alugados.html" class="btn btn-primary">Voltar para Aluguéis</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>

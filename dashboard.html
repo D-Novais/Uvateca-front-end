@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uvateca - Dashboard Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="index.html" class="logo">Uvateca</a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="categoria.html">Categoria</a></li>
+                <li><a href="about.html">Contato</a></li>
+            </ul>
+        </nav>
+        <div class="user-icon">
+            <a href="#" id="user-icon-btn">
+                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
+            </a> 
+        </div>
+    </header>
+
+    <aside id="user-sidebar" class="sidebar">
+        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
+        <img src="perfil.jpeg" alt="Foto do Perfil">
+            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
+        </div>
+        <div id="sidebar-deslogado" class="sidebar-profile">
+            <p class="welcome-msg">Você não está logado.</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li>
+                <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
+                <li id="nav-login" style="display: none;"><a href="login.html">Login / Entrar</a></li>
+                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2 class="dashboard-title">Dashboard Administrativo</h2>
+            
+            <div class="dashboard-controls">
+                <button class="dashboard-tab active" data-target="multas-pane">Gestão de Multas e Cobrança</button>
+                <button class="dashboard-tab" data-target="lucros-pane">Análise Financeira</button>
+            </div>
+
+            <section class="dashboard-content">
+                
+                <div id="multas-pane" class="dashboard-pane active">
+                    <h3>Relatório de Multas e Risco Financeiro</h3>
+                    <iframe src="https://lookerstudio.google.com/embed/reporting/24fc6b08-2c90-40d9-94a2-c96823a93927/page/kfFeF" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+                </div>
+                
+                <div id="lucros-pane" class="dashboard-pane">
+                    <h3>Análise de Tendência e Projeção Financeira</h3>
+                    <iframe data-src="https://lookerstudio.google.com/embed/reporting/24fc6b08-2c90-40d9-94a2-c96823a93927/page/p_06ufn3v8xd" 
+                            src=""
+                            frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+                    
+                    <p style="text-align: center; margin-top: 10px;">Carregando o relatório financeiro...</p>
+                </div>
+            
+            </section>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
