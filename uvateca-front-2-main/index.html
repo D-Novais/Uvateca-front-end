@@ -38,52 +38,85 @@
         <nav class="sidebar-nav">
             <ul>
                 <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
-                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
-                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
+                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> 
+                
+                <li id="nav-cadastrar-usuario" style="display: none;"><a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
+                <li id="nav-registrar-livro" style="display: none;"><a href="cadastro-livro.html">📚 Registrar Livro</a></li>
+                <li id="nav-realizar-aluguel" style="display: none;"><a href="alugar-livro.html">🤝 Realizar Aluguel</a></li>
+
+                <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Meus Aluguéis</a></li>
                 
                 <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
                 <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
             </ul>
         </nav>
     </aside>
+
     <main>
         <div class="container">
             <h2>Nossa Coleção</h2>
-            <section class="book-grid">
-                <article class="book-card">
-                    <img src="https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Capa+Livro+1" alt="Capa do Livro Duna">
-                    <div class="card-content">
-                        <div>
-                            <h3>Duna</h3>
-                            <p class="category">Ficção Científica</p>
-                        </div>
-                        <a href="detalhe-livro.html" class="btn btn-primary">Ver mais</a>
-                    </div>
-                </article>
-                <article class="book-card">
-                    <img src="https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Capa+Livro+2" alt="Capa do Livro 1984">
-                    <div class="card-content">
-                        <div>
-                            <h3>1984</h3>
-                            <p class="category">Distopia</p>
-                        </div>
-                        <a href="detalhe-livro.html" class="btn btn-primary">Ver mais</a>
-                    </div>
-                </article>
-                <article class="book-card">
-                    <img src="https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Capa+Livro+3" alt="Capa do Livro O Hobbit">
-                    <div class="card-content">
-                        <div>
-                            <h3>O Hobbit</h3>
-                            <p class="category">Fantasia</p>
-                        </div>
-                        <a href="detalhe-livro.html" class="btn btn-primary">Ver mais</a>
-                    </div>
-                </article>
+            
+            <section class="book-grid" id="lista-livros-dinamica">
+                <p style="color: white; text-align: center;">Carregando livros do acervo...</p>
             </section>
+            
         </div>
     </main>
 
     <script src="main.js"></script>
+
+    <script>
+        const API_URL = "http://localhost:8080/api";
+
+        async function carregarLivrosDoBanco() {
+            const container = document.getElementById('lista-livros-dinamica');
+            
+            try {
+                // Chama o Back-End Java
+                const response = await fetch(`${API_URL}/livros`);
+                const livros = await response.json();
+
+                container.innerHTML = ''; // Limpa a mensagem de "Carregando..."
+
+                if (livros.length === 0) {
+                    container.innerHTML = '<p style="color:white">Nenhum livro encontrado no banco de dados.</p>';
+                    return;
+                }
+
+                livros.forEach(livro => {
+                    // Verifica se tem imagemUrl do banco, senão usa uma imagem padrão roxa
+                    const capa = livro.imagemUrl ? livro.imagemUrl : "https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Capa";
+
+                    // Cria o card do livro
+                    const card = document.createElement('article');
+                    card.className = 'book-card';
+                    
+                    // Monta o HTML do card
+                    card.innerHTML = `
+                        <div class="book-cover-container">
+                            <img src="${capa}" alt="Capa de ${livro.titulo}">
+                        </div>
+                        <div class="card-content">
+                            <div>
+                                <h3>${livro.titulo}</h3>
+                                <p class="category">${livro.genero}</p>
+                                <small style="color:#ccc; display:block; margin-bottom:5px;">ISBN: ${livro.isbn}</small>
+                            </div>
+                            <a href="#" class="btn btn-primary" onclick="alert('Detalhes do livro: ${livro.titulo}')">Ver mais</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = '<p style="color:red; text-align:center;">Erro ao carregar livros. Verifique se o servidor Java está rodando.</p>';
+            }
+        }
+
+        // Chama a função assim que a página carrega
+        document.addEventListener("DOMContentLoaded", carregarLivrosDoBanco);
+    </script>
 </body>
 </html>

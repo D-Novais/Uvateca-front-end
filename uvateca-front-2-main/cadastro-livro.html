@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uvateca - Painel Funcionário</title>
+    <title>Uvateca - Registrar Livro</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <header class="main-header">
         <a href="index.html" class="logo">Uvateca</a>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="categoria.html">Categoria</a></li>
-                <li><a href="about.html">Contato</a></li>
-            </ul>
-        </nav>
         <div class="user-icon">
             <a href="#" id="user-icon-btn">
-                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
+                <img src="menu.png" class="user-icon-img" alt="Menu">
             </a> 
         </div>
     </header>
@@ -39,49 +32,58 @@
             <ul>
                 <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
                 <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> 
-                <li id="nav-cadastrar-usuario" style="display: none;"> <a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
-                <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
-                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
-                <li id="nav-registrar-livro" style="display: none;"> <a href="cadastro-livro.html">📚 Registrar Livro</a> </li> 
+                
+                <li id="nav-cadastrar-usuario" style="display: none;"><a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
+                <li id="nav-registrar-livro" style="display: none;"><a href="cadastro-livro.html">📚 Registrar Livro</a></li>
                 <li id="nav-realizar-aluguel" style="display: none;"><a href="alugar-livro.html">🤝 Realizar Aluguel</a></li>
 
+                <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Meus Aluguéis</a></li>
                 
-                <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
-                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+                <li id="nav-login"><a href="login.html">Login</a></li>
+                <li id="nav-logout" style="display: none;"><a href="#">Sair</a></li>
             </ul>
         </nav>
     </aside>
 
     <main>
         <div class="container">
-            <h2>Painel do Funcionário</h2>
+            <h2>Gerenciamento de Acervo</h2>
             <div class="form-container">
-                <h3>Cadastrar Novo Livro</h3>
+                <h3>Registrar Novo Livro</h3>
+                
                 <form id="form-cadastro-livro">
                     <div class="form-group">
                         <label for="titulo">Título</label>
                         <input type="text" id="titulo" name="titulo" required>
                     </div>
+
                     <div class="form-group">
                         <label for="autor">Autor</label>
                         <input type="text" id="autor" name="autor" required>
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="isbn">ISBN (Código Único)</label>
+                        <label for="isbn">ISBN</label>
                         <input type="text" id="isbn" name="isbn" required placeholder="Ex: 978-85-333">
                     </div>
-                    
+
                     <div class="form-group">
-                        <label for="ano">Ano de Publicação</label>
-                        <input type="number" id="ano" name="ano" required placeholder="Ex: 2024">
+                        <label for="imagemUrl">Link da Imagem da Capa (URL)</label>
+                        <input type="text" id="imagemUrl" name="imagemUrl" placeholder="Ex: https://site.com/foto.jpg">
+                        <small style="color: #666; font-size: 0.85rem;">Cole o link direto da imagem aqui.</small>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="ano">Ano</label>
+                        <input type="number" id="ano" name="ano" required placeholder="2024">
+                    </div>
+
                     <div class="form-group">
                         <label for="edicao">Edição</label>
-                        <input type="text" id="edicao" name="edicao" placeholder="Ex: 1ª Edição">
+                        <input type="text" id="edicao" name="edicao" placeholder="1ª Edição">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="quantidade">Quantidade Disponível</label>
                         <input type="number" id="quantidade" name="quantidade" required value="1">
@@ -90,34 +92,36 @@
                     <div class="form-group">
                         <label for="categoria">Categoria</label>
                         <select id="categoria" name="categoria">
-                            <option value="Ficção Científica">Ficção Científica</option>
-                            <option value="Fantasia">Fantasia</option>
+                            <option value="Ficção">Ficção</option>
+                            <option value="Técnico">Técnico</option>
                             <option value="Romance">Romance</option>
                             <option value="Terror">Terror</option>
-                            <option value="Técnico">Técnico</option>
+                            <option value="Fantasia">Fantasia</option>
                         </select>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="sinopse">Sinopse</label>
-                        <textarea id="sinopse" name="sinopse" rows="4" style="width: 100%; padding: 0.8rem; border-radius: 5px;" placeholder="Breve descrição do livro..."></textarea>
+                        <textarea id="sinopse" name="sinopse" rows="4" placeholder="Breve descrição..."></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-secondary">Salvar Livro</button>
+                    <button type="submit" class="btn btn-secondary">Salvar no Banco</button>
                 </form>
             </div>
         </div>
     </main>
 
     <script src="main.js"></script>
-    
+
     <script>
         document.getElementById('form-cadastro-livro').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const API_URL = "http://localhost:8080/api";
+            
+            // Imagem padrão caso o campo fique vazio
+            const imgPadrao = "https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Sem+Capa";
+            const urlDigitada = document.getElementById('imagemUrl').value.trim();
 
-            // Monta o objeto igual ao modelo Java Livro.java
             const novoLivro = {
                 titulo: document.getElementById('titulo').value,
                 autor: document.getElementById('autor').value,
@@ -126,7 +130,9 @@
                 edicao: document.getElementById('edicao').value || "1ª Edição", 
                 sinopse: document.getElementById('sinopse').value || "Sem sinopse",
                 ano_publicacao: parseInt(document.getElementById('ano').value),
-                quantidade_disponivel: parseInt(document.getElementById('quantidade').value)
+                quantidade_disponivel: parseInt(document.getElementById('quantidade').value),
+                // Envia a URL ou a imagem padrão
+                imagemUrl: urlDigitada || imgPadrao 
             };
 
             try {
@@ -137,15 +143,15 @@
                 });
 
                 if (response.ok) {
-                    alert("✅ Livro cadastrado com sucesso!");
+                    alert("✅ Livro registrado com sucesso!");
                     e.target.reset(); // Limpa o formulário
                 } else {
                     const textoErro = await response.text();
-                    alert("❌ Erro ao cadastrar: " + textoErro);
+                    alert("❌ Erro ao registrar: " + textoErro);
                 }
             } catch (error) {
                 console.error(error);
-                alert("❌ Erro de conexão com o servidor.");
+                alert("❌ Erro de conexão. O servidor está ligado?");
             }
         });
     </script>

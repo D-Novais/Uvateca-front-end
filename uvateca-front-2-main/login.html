@@ -25,23 +25,18 @@
     </header>
 
     <aside id="user-sidebar" class="sidebar">
-        
         <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
             <img src="perfil.jpeg" alt="Foto do Perfil">
             <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
         </div>
-
         <div id="sidebar-deslogado" class="sidebar-profile">
             <p class="welcome-msg">Você não está logado.</p>
         </div>
-        
         <nav class="sidebar-nav">
             <ul>
                 <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
                 <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
-                
                 <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
-
                 <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
             </ul>
         </nav>
@@ -52,8 +47,8 @@
             <h2>Acesse sua Conta</h2>
             <form id="login-form">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="Digite apenas números" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Senha</label>

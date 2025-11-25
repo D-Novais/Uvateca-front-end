@@ -1,38 +1,53 @@
 /*
- * Lógica de Simulação de Login da Uvateca
+ * Lógica de Login integrada com a API Java Spring Boot
  */
 document.addEventListener("DOMContentLoaded", function() {
     
     const loginForm = document.getElementById("login-form");
+    // Certifique-se de que a porta aqui é a mesma que aparece no console do Java (ex: 8080)
+    const API_URL = "http://localhost:8080/api";
 
-    loginForm.addEventListener("submit", function(event) {
-        event.preventDefault(); 
-        const email = document.getElementById("email").value.trim();
-        
-        const userName = email.split('@')[0];
-        let role = 'CLIENTE'; // Cargo padrão
+    if (loginForm) {
+        loginForm.addEventListener("submit", async function(event) {
+            event.preventDefault(); 
+            
+            // Pega os dados do formulário
+            const cpfInput = document.getElementById("cpf").value.trim(); 
+            const senhaInput = document.getElementById("password").value;
 
-        // 1. Lógica de determinação do cargo
-        if (email === "admin1234@gmail.com") {
-            role = 'ADMIN';
-        } else if (email === "func@uvateca.com") {
-            role = 'FUNCIONARIO';
-        }
+            const loginData = {
+                cpf: cpfInput,
+                senha: senhaInput
+            };
 
-        // 2. SALVA O ESTADO E O CARGO NO LOCALSTORAGE
-        localStorage.setItem('uvatecaUser', userName);
-        localStorage.setItem('uvatecaRole', role); // <-- NOVO: Salva o cargo
+            try {
+                // Faz a requisição para o Back-end
+                const response = await fetch(`${API_URL}/usuarios/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
 
-        // 3. Redirecionamento com base no cargo
-        if (role === 'ADMIN') {
-            alert("✅ Bem-vindo, Administrador! Redirecionando...");
-            window.location.href = "painel-admin.html";
-        } else if (role === 'FUNCIONARIO') {
-            alert("✅ Bem-vindo, Funcionário! Redirecionando...");
-            window.location.href = "painel-funcionario.html";
-        } else {
-            alert("✅ Login realizado com sucesso!");
-            window.location.href = "index.html"; 
-        }
-    });
+                if (response.ok) {
+                    const usuario = await response.json();
+                    
+                    // Salva os dados do usuário no navegador
+                    localStorage.setItem('uvatecaUser', usuario.nome);
+                    localStorage.setItem('uvatecaRole', usuario.tipoUsuario); 
+                    localStorage.setItem('uvatecaCpf', usuario.cpf);
+
+                    alert(`✅ Bem-vindo(a), ${usuario.nome}!`);
+
+                    // --- MUDANÇA AQUI: TODOS AGORA VÃO PARA O INDEX ---
+                    window.location.href = "index.html"; 
+
+                } else {
+                    alert("❌ Login falhou! Verifique se o CPF e a Senha estão corretos.");
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("❌ Erro ao conectar com o servidor. Verifique se o Java está rodando.");
+            }
+        });
+    }
 });

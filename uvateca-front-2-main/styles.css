@@ -24,7 +24,7 @@ body {
     font-family: var(--font-family);
     background-color: var(--color-de-fundo-principal);
     color: var(--cor-de-texto);
-    padding-top: 80px; 
+    padding-top: 81px; 
 }
 
 a {
@@ -155,7 +155,21 @@ h1, h2, h3 {
     height: 400px; 
     object-fit: cover;
 }
+.book-cover-container {
+    width: 100%;
+    height: 400px; /* Altura fixa para todos os livros */
+    background-color: var(--cor-objeto); /* Fundo roxo caso a imagem falhe */
+    overflow: hidden;
+}
 
+/* Faz a imagem cobrir todo o espaço sem esticar */
+.book-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ISSO É O SEGREDO: Corta as bordas para preencher sem distorcer */
+    object-position: center;
+    border-bottom: 4px solid var(--botao-cor-secundaria); /* Detalhe estético opcional */
+}
 .card-content {
     padding: 1.5rem;
     flex-grow: 1; 

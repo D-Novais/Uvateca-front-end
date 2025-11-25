@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uvateca - Realizar Aluguel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="index.html" class="logo">Uvateca</a>
+        <div class="user-icon">
+            <a href="#" id="user-icon-btn"><img src="menu.png" class="user-icon-img"></a> 
+        </div>
+    </header>
+
+    <aside id="user-sidebar" class="sidebar">
+        
+        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
+            <img src="perfil.jpeg" alt="Foto do Perfil">
+            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
+        </div>
+
+        <div id="sidebar-deslogado" class="sidebar-profile">
+            <p class="welcome-msg">Você não está logado.</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-usuario" style="display: none;"><a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
+                <li id="nav-registrar-livro" style="display: none;"><a href="cadastro-livro.html">Registrar Livro</a></li>
+                <li id="nav-realizar-aluguel" style="display: none;"><a href="alugar-livro.html">Realizar Aluguel</a></li>
+                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> 
+                <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
+                <li id="nav-login"><a href="login.html">Login</a></li>
+                <li id="nav-logout" style="display: none;"><a href="#">Sair</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>Gestão de Empréstimos</h2>
+            <div class="form-container">
+                <h3>Novo Aluguel</h3>
+                <form id="form-aluguel">
+                    
+                    <div class="form-group">
+                        <label>ID do Funcionário Responsável</label>
+                        <input type="number" id="idFuncionario" required placeholder="Ex: 1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ID do Usuário (Leitor)</label>
+                        <input type="number" id="idUsuario" required placeholder="Ex: 5">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ID do Livro</label>
+                        <input type="number" id="idLivro" required placeholder="Ex: 10">
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary">Confirmar Aluguel</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script>
+        document.getElementById('form-aluguel').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const API_URL = "http://localhost:8080/api";
+            
+            // O Backend espera: { "idFuncionario": X, "idUsuario": Y, "idLivro": Z }
+            const dadosAluguel = {
+                idFuncionario: parseInt(document.getElementById('idFuncionario').value),
+                idUsuario: parseInt(document.getElementById('idUsuario').value),
+                idLivro: parseInt(document.getElementById('idLivro').value)
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/emprestimos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosAluguel)
+                });
+                
+                const textoResposta = await response.text();
+
+                if (response.ok) {
+                    alert("✅ " + textoResposta);
+                    e.target.reset();
+                } else {
+                    alert("❌ Erro: " + textoResposta);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("❌ Erro de conexão.");
+            }
+        });
+    </script>
+</body>
+</html>
