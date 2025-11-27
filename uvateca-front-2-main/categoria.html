@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,6 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uvateca - Categorias</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .search-container {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .filter-sidebar {
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+    </style>
 </head>
 <body>
 
@@ -17,75 +41,213 @@
                 <li><a href="about.html">Contato</a></li>
             </ul>
         </nav>
-        <div class="user-icon">
-            <a href="#" id="user-icon-btn">
-                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
-            </a> 
-        </div>
+        <div class="user-icon"><a href="#" id="user-icon-btn"><img src="menu.png" class="user-icon-img"></a></div>
     </header>
 
     <aside id="user-sidebar" class="sidebar">
-        
-        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
-            <img src="perfil.jpeg" alt="Foto do Perfil">
-            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
-        </div>
-
-        <div id="sidebar-deslogado" class="sidebar-profile">
-            <p class="welcome-msg">Você não está logado.</p>
-        </div>
-        
+        <div id="sidebar-logado" class="sidebar-profile" style="display:none;"><img src="perfil.jpeg"><p id="welcome-msg-text"></p></div>
+        <div id="sidebar-deslogado" class="sidebar-profile"><p>Deslogado</p></div>
         <nav class="sidebar-nav">
             <ul>
-                <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
-                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
-                <li id="nav-cadastrar-usuario" style="display: none;"> <a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
-                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
-                <li id="nav-registrar-livro" style="display: none;"> <a href="cadastro-livro.html">📚 Registrar Livro</a> </li> 
-                <li id="nav-realizar-aluguel" style="display: none;"><a href="alugar-livro.html">🤝 Realizar Aluguel</a></li>
-                
-                
+                <li id="nav-dashboard" style="display:none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-funcionario" style="display:none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> 
+                <li id="nav-cadastrar-usuario" style="display:none;"><a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
+                <li id="nav-registrar-livro" style="display:none;"><a href="cadastro-livro.html">Registrar Livro</a></li>
+                <li id="nav-realizar-aluguel" style="display:none;"><a href="alugar-livro.html">Realizar Aluguel</a></li>
+                <li id="nav-gestao-leitores" style="display:none;"><a href="gestao-leitores.html">👥 Gestão de Leitores</a></li>
+                <li id="nav-acervo" style="display:none;"><a href="gestao-acervo.html">📚 Acervo Bibliográfico</a></li>
+                <li id="nav-gestao-emprestimos" style="display:none;"><a href="gestao-emprestimos.html">🤝 Gestão de Empréstimos</a></li>
+                <li id="nav-gestao-funcionarios" style="display: none;"><a href="gestao-funcionarios.html">👔 Gestão de Funcionários</a></li>
+                <li id="nav-biblioteca" style="display:none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display:none;"><a href="alugados.html">Meus Aluguéis</a></li>
                 <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
-                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+                <li id="nav-logout" style="display:none;"><a href="#">Sair (Logout)</a></li>
             </ul>
         </nav>
     </aside>
 
     <main>
         <div class="container">
-            <h2>Filtre por Categoria</h2>
+            <h2>Explorar Acervo</h2>
+            
             <section class="filter-section">
                 
                 <aside class="filter-sidebar">
                     <h3>Filtros</h3>
-                    <form>
+                    <form id="form-filtros" onsubmit="event.preventDefault()">
                         <div class="form-group">
-                            <label for="categoria">Categoria</label>
-                            <select id="categoria" name="categoria">
-                                <option value="ficcao">Ficção Científica</option>
-                                <option value="distopia">Distopia</option>
+                            <label for="filtro-categoria">Categoria</label>
+                            <select id="filtro-categoria" onchange="aplicarFiltros()">
+                                <option value="">Todas</option>
+                                <option value="Ficção">Ficção</option>
+                                <option value="Técnico">Técnico</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Terror">Terror</option>
+                                <option value="Fantasia">Fantasia</option>
+                                <option value="Biografia">Biografia</option>
+                                <option value="História">História</option>
+                                <option value="Infantil">Infantil</option>
+                                <option value="Aventura">Aventura</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="data">Data de Publicação</label>
-                            <input type="date" id="data" name="data">
+                            <label for="filtro-ano">Ano de Publicação</label>
+                            <input type="number" id="filtro-ano" placeholder="Ex: 2024" oninput="aplicarFiltros()">
                         </div>
+                        <button class="btn btn-secondary btn-full-width" onclick="limparFiltros()">Limpar Filtros</button>
                     </form>
                 </aside>
 
-                <div class="book-grid">
-                    <article class="book-card">
-                        <img src="https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Capa+Livro+1" alt="Capa do Livro Duna">
-                        <div class="card-content">
-                            <div><h3>Duna</h3><p class="category">Ficção Científica</p></div>
-                            <a href="detalhe-livro.html" class="btn btn-primary">Ver mais</a>
-                        </div>
-                    </article>
+                <div style="flex: 1;">
+                    <div class="search-container">
+                        <input type="text" id="barra-pesquisa" class="search-input" placeholder="Pesquise por título ou autor..." oninput="aplicarFiltros()">
+                    </div>
+                    <div class="book-grid" id="lista-livros-dinamica">
+                        <p style="color: white;">Carregando livros...</p>
+                    </div>
                 </div>
             </section>
         </div>
     </main>
 
+    <div id="modalLivro" class="modal-overlay" onclick="fecharModal(event)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="fecharModal(event)">&times;</span>
+            <div class="modal-left"><img id="modal-img" src="" alt="Capa"></div>
+            <div class="modal-right">
+                <h2 id="modal-titulo" class="modal-title">Título</h2>
+                <div class="modal-meta">
+                    <span id="modal-autor">Autor</span> | <span id="modal-categoria">Cat</span> | <span id="modal-ano">Ano</span>
+                </div>
+                <div class="modal-meta" style="border:none; padding:0; font-size:1rem;">
+                    <span id="modal-isbn">ISBN</span> | <span id="modal-edicao">Ed</span> | <span id="modal-qtd">Qtd</span>
+                </div>
+                <div style="margin-top:30px;">
+                    <p class="modal-sinopse-label">Sinopse</p>
+                    <p id="modal-sinopse" class="modal-sinopse-text">Desc...</p>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="modal-action-btn" onclick="irParaContato()">Entre em Contato</button>
+                    <button class="modal-action-btn" onclick="adicionarMinhaLista()">Adicionar à minha lista</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="main.js"></script>
+    <script>
+        const API_URL = "http://localhost:8080/api";
+        let todosLivros = []; 
+        let livroAtual = null; // Guarda o livro aberto no modal
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const container = document.getElementById('lista-livros-dinamica');
+            try {
+                const response = await fetch(`${API_URL}/livros`);
+                todosLivros = await response.json();
+                renderizarLivros(todosLivros);
+            } catch (error) {
+                container.innerHTML = '<p style="color:red">Erro ao conectar com o servidor.</p>';
+                console.error(error);
+            }
+        });
+
+        function aplicarFiltros() {
+            const termoPesquisa = document.getElementById('barra-pesquisa').value.toLowerCase();
+            const categoriaSelecionada = document.getElementById('filtro-categoria').value;
+            const anoSelecionado = document.getElementById('filtro-ano').value;
+
+            const livrosFiltrados = todosLivros.filter(livro => {
+                const matchTexto = livro.titulo.toLowerCase().includes(termoPesquisa) || 
+                                   livro.autor.toLowerCase().includes(termoPesquisa);
+                const matchCategoria = categoriaSelecionada === "" || livro.genero === categoriaSelecionada;
+                const matchAno = anoSelecionado === "" || livro.ano_publicacao == anoSelecionado;
+                return matchTexto && matchCategoria && matchAno;
+            });
+            renderizarLivros(livrosFiltrados);
+        }
+
+        function renderizarLivros(lista) {
+            const container = document.getElementById('lista-livros-dinamica');
+            container.innerHTML = "";
+
+            if (lista.length === 0) {
+                container.innerHTML = '<p style="color:white; font-size:1.2rem;">Nenhum livro encontrado com esses filtros.</p>';
+                return;
+            }
+
+            lista.forEach((livro) => {
+                const capa = livro.imagemUrl || "https://via.placeholder.com/300x400/4B0080/FFFFFF?text=Capa";
+                const card = document.createElement('article');
+                card.className = 'book-card';
+                card.innerHTML = `
+                    <div class="book-cover-container">
+                        <img src="${capa}" alt="Capa de ${livro.titulo}">
+                    </div>
+                    <div class="card-content">
+                        <div>
+                            <h3>${livro.titulo}</h3>
+                            <p class="category">${livro.genero}</p>
+                        </div>
+                        <button class="btn btn-primary" onclick='abrirModalPorObjeto(${JSON.stringify(livro).replace(/'/g, "&#39;")})'>Ver mais</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function limparFiltros() {
+            document.getElementById('barra-pesquisa').value = "";
+            document.getElementById('filtro-categoria').value = "";
+            document.getElementById('filtro-ano').value = "";
+            renderizarLivros(todosLivros);
+        }
+
+        // --- FUNÇÕES DO MODAL ---
+
+        function abrirModalPorObjeto(livro) {
+            livroAtual = livro; // Salva o livro atual para o botão "Adicionar"
+
+            document.getElementById('modal-img').src = livro.imagemUrl || "https://via.placeholder.com/300";
+            document.getElementById('modal-titulo').innerText = livro.titulo;
+            document.getElementById('modal-autor').innerText = "Autor: " + livro.autor;
+            document.getElementById('modal-categoria').innerText = livro.genero;
+            document.getElementById('modal-ano').innerText = "Ano: " + livro.ano_publicacao;
+            document.getElementById('modal-isbn').innerText = "ISBN: " + livro.isbn;
+            document.getElementById('modal-edicao').innerText = "Edição: " + livro.edicao;
+            document.getElementById('modal-qtd').innerText = "Disp: " + livro.quantidade_disponivel;
+            document.getElementById('modal-sinopse').innerText = livro.sinopse || "Sem sinopse.";
+            
+            document.getElementById('modalLivro').style.display = 'flex';
+        }
+
+        function fecharModal(event) {
+            document.getElementById('modalLivro').style.display = 'none';
+        }
+
+        // --- AÇÕES DOS BOTÕES ---
+
+        function irParaContato() {
+            window.location.href = "about.html";
+        }
+
+        function adicionarMinhaLista() {
+            if (!livroAtual) return;
+
+            let biblioteca = JSON.parse(localStorage.getItem("minhaBiblioteca")) || [];
+            // Usa ISBN para verificar duplicidade
+            const jaExiste = biblioteca.some(b => b.isbn === livroAtual.isbn || b.id === livroAtual.isbn);
+
+            if (jaExiste) {
+                alert("Este livro já está na sua lista!");
+            } else {
+                // Adiciona o objeto completo à lista
+                biblioteca.push(livroAtual);
+                localStorage.setItem("minhaBiblioteca", JSON.stringify(biblioteca));
+                alert("✅ Livro adicionado à Minha Biblioteca com sucesso!");
+            }
+        }
+    </script>
 </body>
 </html>

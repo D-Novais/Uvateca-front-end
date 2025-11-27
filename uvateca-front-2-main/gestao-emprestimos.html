@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Uvateca - Gestão de Empréstimos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo">Uvateca</a>
+        <div class="user-icon">
+            <a href="#" id="user-icon-btn"><img src="menu.png" class="user-icon-img"></a>
+        </div>
+    </header>
+
+    <aside id="user-sidebar" class="sidebar">
+        <div id="sidebar-logado" class="sidebar-profile" style="display:none;">
+            <img src="perfil.jpeg">
+            <p id="welcome-msg-text"></p>
+        </div>
+        <div id="sidebar-deslogado" class="sidebar-profile"><p>Deslogado</p></div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard" style="display:none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-gestao-funcionarios" style="display: none;"><a href="gestao-funcionarios.html">👔 Gestão de Funcionários</a></li>
+                <li id="nav-gestao-leitores" style="display:none;"><a href="gestao-leitores.html">👥 Gestão de Leitores</a></li>
+                <li id="nav-acervo" style="display:none;"><a href="gestao-acervo.html">📚 Acervo Bibliográfico</a></li>
+                <li id="nav-gestao-emprestimos" style="display:none;"><a href="gestao-emprestimos.html">🤝 Gestão de Empréstimos</a></li>
+                <li id="nav-biblioteca" style="display:none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display:none;"><a href="alugados.html">Meus Aluguéis</a></li>
+                <li id="nav-login"><a href="login.html">Sair</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>🤝 Gestão de Empréstimos</h2>
+            
+            <div class="form-container">
+                <h3>Novo Empréstimo</h3>
+                <form id="form-aluguel">
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="color: white; font-size: 0.9rem;">Funcionário Responsável</label>
+                            <input list="lista-funcionarios" id="input-func" placeholder="Digite o nome..." required style="width: 100%;">
+                            <datalist id="lista-funcionarios"></datalist>
+                            <input type="hidden" id="idFunc"> </div>
+
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="color: white; font-size: 0.9rem;">Leitor (Usuário)</label>
+                            <input list="lista-usuarios" id="input-user" placeholder="Busque por nome ou CPF..." required style="width: 100%;">
+                            <datalist id="lista-usuarios"></datalist>
+                            <input type="hidden" id="idUser"> </div>
+
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="color: white; font-size: 0.9rem;">Livro</label>
+                            <input list="lista-livros" id="input-livro" placeholder="Busque por título..." required style="width: 100%;">
+                            <datalist id="lista-livros"></datalist>
+                            <input type="hidden" id="idLivro"> </div>
+
+                    </div>
+                    <button type="submit" class="btn btn-secondary" style="width:100%;">Realizar Empréstimo</button>
+                </form>
+            </div>
+
+            <h3>Empréstimos Ativos</h3>
+            <div style="overflow-x: auto;">
+                <table class="management-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Leitor</th>
+                            <th>Livro</th>
+                            <th>Vencimento</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-emprestimos"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script>
+        const API = "http://localhost:8080/api";
+        
+        // Listas para guardar os dados carregados do banco
+        let todosFuncionarios = [];
+        let todosUsuarios = [];
+        let todosLivros = [];
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            await Promise.all([
+                carregarEmprestimos(),
+                carregarListasParaSelecao()
+            ]);
+        });
+
+        // --- 1. FUNÇÃO PARA CARREGAR LISTAS DO BANCO ---
+        async function carregarListasParaSelecao() {
+            try {
+                // Busca Funcionários
+                const resFunc = await fetch(`${API}/funcionarios`); // Certifique-se que o FuncionarioController existe
+                todosFuncionarios = await resFunc.json();
+                preencherDatalist('lista-funcionarios', todosFuncionarios, 'nome', 'id_funcionario');
+
+                // Busca Usuários
+                const resUser = await fetch(`${API}/usuarios`);
+                todosUsuarios = await resUser.json();
+                // Mostra Nome e CPF na lista para facilitar
+                preencherDatalistUsuarios('lista-usuarios', todosUsuarios);
+
+                // Busca Livros
+                const resLivro = await fetch(`${API}/livros`);
+                todosLivros = await resLivro.json();
+                preencherDatalist('lista-livros', todosLivros, 'titulo', 'id_livro');
+
+            } catch (error) {
+                console.error("Erro ao carregar listas de seleção:", error);
+            }
+        }
+
+        function preencherDatalist(elementId, dados, campoTexto, campoId) {
+            const datalist = document.getElementById(elementId);
+            datalist.innerHTML = "";
+            dados.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item[campoTexto]; // O que aparece escrito
+                // Guardamos o ID num atributo data-id para recuperar depois
+                // Nota: O datalist padrão não exibe atributos extras, usamos lógica JS abaixo para pegar o ID
+                datalist.appendChild(option);
+            });
+        }
+
+        function preencherDatalistUsuarios(elementId, dados) {
+            const datalist = document.getElementById(elementId);
+            datalist.innerHTML = "";
+            dados.forEach(item => {
+                const option = document.createElement('option');
+                option.value = `${item.nome} (CPF: ${item.cpf})`; // Formato especial
+                datalist.appendChild(option);
+            });
+        }
+
+        // --- 2. LÓGICA DE SELEÇÃO INTELIGENTE ---
+        // Quando o usuário seleciona um nome, o código procura o ID correspondente nos arrays
+
+        function obterIdPorNome(nomeDigitado, lista, campoNome, campoId) {
+            const item = lista.find(i => i[campoNome] === nomeDigitado);
+            return item ? item[campoId] : null;
+        }
+        
+        function obterIdUsuarioPorTexto(textoDigitado) {
+            // O texto é "Nome (CPF: 123)"
+            const item = todosUsuarios.find(u => `${u.nome} (CPF: ${u.cpf})` === textoDigitado);
+            return item ? item.id_usuario : null;
+        }
+
+        // --- 3. SUBMIT DO FORMULÁRIO ---
+        document.getElementById("form-aluguel").onsubmit = async function(e) {
+            e.preventDefault();
+
+            // 1. Pega os valores escritos nos inputs
+            const nomeFunc = document.getElementById("input-func").value;
+            const nomeUser = document.getElementById("input-user").value;
+            const tituloLivro = document.getElementById("input-livro").value;
+
+            // 2. Converte Nomes em IDs usando os arrays carregados
+            const idFunc = obterIdPorNome(nomeFunc, todosFuncionarios, 'nome', 'id_funcionario');
+            const idUser = obterIdUsuarioPorTexto(nomeUser);
+            const idLivro = obterIdPorNome(tituloLivro, todosLivros, 'titulo', 'id_livro');
+
+            if (!idFunc || !idUser || !idLivro) {
+                alert("❌ Erro: Selecione opções válidas da lista sugestiva. Verifique se digitou corretamente.");
+                return;
+            }
+
+            const dados = {
+                idFuncionario: parseInt(idFunc),
+                idUsuario: parseInt(idUser),
+                idLivro: parseInt(idLivro)
+            };
+
+            try {
+                const res = await fetch(`${API}/emprestimos`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(dados)
+                });
+                alert(await res.text());
+                
+                // Limpa tudo
+                e.target.reset();
+                carregarEmprestimos();
+            } catch (error) {
+                alert("Erro ao realizar empréstimo.");
+            }
+        };
+
+        // --- 4. LISTAGEM DE EMPRÉSTIMOS ---
+        async function carregarEmprestimos() {
+            try {
+                const res = await fetch(`${API}/emprestimos`);
+                const lista = await res.json();
+                const tbody = document.getElementById("tabela-emprestimos");
+                tbody.innerHTML = "";
+                
+                if(lista.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Nenhum empréstimo ativo.</td></tr>";
+                    return;
+                }
+
+                lista.forEach(e => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${e.id}</td>
+                            <td>${e.usuario}</td>
+                            <td>${e.livro}</td>
+                            <td>${e.devolucao}</td>
+                            <td>
+                                <button class="btn-return" onclick="devolver(${e.id})">✅ Devolver</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Erro ao carregar:", error);
+            }
+        }
+
+        async function devolver(id) {
+            if(confirm("Confirmar devolução do livro?")) {
+                try {
+                    const res = await fetch(`${API}/emprestimos/${id}/devolucao`, { method: 'PUT' });
+                    const texto = await res.text();
+                    alert(texto);
+                    carregarEmprestimos();
+                } catch (error) {
+                    alert("Erro ao conectar com o servidor.");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

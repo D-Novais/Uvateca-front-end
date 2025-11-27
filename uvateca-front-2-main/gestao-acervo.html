@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Uvateca - Acervo Bibliográfico</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="main-header"><a href="index.html" class="logo">Uvateca</a> <div class="user-icon"><a href="#" id="user-icon-btn"><img src="menu.png" class="user-icon-img"></a></div></header>
+    
+    <aside id="user-sidebar" class="sidebar">
+        <div id="sidebar-logado" class="sidebar-profile" style="display:none;"><img src="perfil.jpeg"><p id="welcome-msg-text"></p></div>
+        <div id="sidebar-deslogado" class="sidebar-profile"><p>Deslogado</p></div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li id="nav-dashboard" style="display:none;"><a href="dashboard.html">Dashboard</a></li>
+                <li id="nav-gestao-funcionarios" style="display: none;"><a href="gestao-funcionarios.html">👔 Gestão de Funcionários</a></li>
+                <li id="nav-gestao-leitores" style="display:none;"><a href="gestao-leitores.html">👥 Gestão de Leitores</a></li>
+                <li id="nav-acervo" style="display:none;"><a href="gestao-acervo.html">📚 Acervo Bibliográfico</a></li>
+                <li id="nav-gestao-emprestimos" style="display:none;"><a href="gestao-emprestimos.html">🤝 Gestão de Empréstimos</a></li>
+                
+                <li id="nav-biblioteca" style="display:none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display:none;"><a href="alugados.html">Meus Aluguéis</a></li>
+                <li id="nav-login"><a href="login.html">Sair</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="container">
+            <h2>📚 Acervo Bibliográfico</h2>
+            
+            <div class="form-container">
+                <h3 id="form-title">Novo Livro</h3>
+                <form id="form-livro">
+                    <input type="hidden" id="isbnOriginal"> 
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group"><label>Título</label><input type="text" id="titulo" required></div>
+                        <div class="form-group"><label>Autor</label><input type="text" id="autor" required></div>
+                        <div class="form-group"><label>ISBN</label><input type="text" id="isbn" required></div>
+                        <div class="form-group"><label>Ano</label><input type="number" id="ano" required></div>
+                        <div class="form-group"><label>Qtd</label><input type="number" id="quantidade" required></div>
+                        
+                        <div class="form-group"><label>Categoria</label>
+                            <select id="categoria">
+                                <option value="Ficção">Ficção</option>
+                                <option value="Técnico">Técnico</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Terror">Terror</option>
+                                <option value="Fantasia">Fantasia</option>
+                                <option value="Biografia">Biografia</option>
+                                <option value="História">História</option>
+                                <option value="Infantil">Infantil</option>
+                                <option value="Aventura">Aventura</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group"><label>Capa URL</label><input type="text" id="imagemUrl"></div>
+                    
+                    <div class="form-group">
+                        <label>Sinopse</label>
+                        <textarea id="sinopse" rows="6" style="width: 100%; padding: 10px; border-radius: 5px;" placeholder="Digite a sinopse..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary" id="btn-salvar">Salvar Livro</button>
+                    <button type="button" class="btn" id="btn-cancelar" style="display:none; background:#ccc;">Cancelar Edição</button>
+                </form>
+            </div>
+
+            <h3>Livros Cadastrados</h3>
+            <div style="overflow-x: auto;">
+                <table class="management-table">
+                    <thead><tr><th>Capa</th><th>Título</th><th>ISBN</th><th>Qtd</th><th>Ações</th></tr></thead>
+                    <tbody id="tabela-livros"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    <script>
+        const API = "http://localhost:8080/api";
+        let editando = false;
+
+        document.addEventListener("DOMContentLoaded", carregarLivros);
+
+        async function carregarLivros() {
+            try {
+                const res = await fetch(`${API}/livros`);
+                const livros = await res.json();
+                const tbody = document.getElementById("tabela-livros");
+                tbody.innerHTML = "";
+                
+                livros.forEach(l => {
+                    const img = l.imagemUrl || "https://via.placeholder.com/50";
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><img src="${img}" width="40" height="60" style="border-radius:4px;"></td>
+                            <td>${l.titulo}</td>
+                            <td>${l.isbn}</td>
+                            <td>${l.quantidade_disponivel}</td>
+                            <td>
+                                <button class="action-btn btn-edit" onclick='prepararEdicao(${JSON.stringify(l)})'>✏️</button>
+                                <button class="action-btn btn-delete" onclick="excluirLivro('${l.isbn}')">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch(e) { console.error("Erro ao carregar livros", e); }
+        }
+
+        async function excluirLivro(isbn) {
+            if(confirm("Deseja excluir este livro?")) {
+                await fetch(`${API}/livros/${isbn}`, { method: 'DELETE' });
+                carregarLivros();
+            }
+        }
+
+        function prepararEdicao(livro) {
+            editando = true;
+            document.getElementById("form-title").innerText = "Editando: " + livro.titulo;
+            document.getElementById("isbnOriginal").value = livro.isbn;
+            
+            document.getElementById("titulo").value = livro.titulo;
+            document.getElementById("autor").value = livro.autor;
+            document.getElementById("isbn").value = livro.isbn;
+            document.getElementById("ano").value = livro.ano_publicacao;
+            document.getElementById("quantidade").value = livro.quantidade_disponivel;
+            document.getElementById("imagemUrl").value = livro.imagemUrl;
+            document.getElementById("sinopse").value = livro.sinopse;
+            
+            // Define o valor do select (se a categoria existir na lista)
+            document.getElementById("categoria").value = livro.genero; 
+
+            document.getElementById("btn-salvar").innerText = "Atualizar Livro";
+            document.getElementById("btn-cancelar").style.display = "inline-block";
+            window.scrollTo(0,0);
+        }
+
+        document.getElementById("btn-cancelar").onclick = function() {
+            document.getElementById("form-livro").reset();
+            editando = false;
+            document.getElementById("form-title").innerText = "Novo Livro";
+            document.getElementById("btn-salvar").innerText = "Salvar Livro";
+            this.style.display = "none";
+        };
+
+        document.getElementById("form-livro").onsubmit = async function(e) {
+            e.preventDefault();
+            const livro = {
+                titulo: document.getElementById("titulo").value,
+                autor: document.getElementById("autor").value,
+                isbn: document.getElementById("isbn").value,
+                ano_publicacao: document.getElementById("ano").value,
+                quantidade_disponivel: document.getElementById("quantidade").value,
+                imagemUrl: document.getElementById("imagemUrl").value,
+                sinopse: document.getElementById("sinopse").value,
+                genero: document.getElementById("categoria").value,
+                edicao: "1ª"
+            };
+
+            if(editando) {
+                const isbnOriginal = document.getElementById("isbnOriginal").value;
+                await fetch(`${API}/livros/${isbnOriginal}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(livro)
+                });
+                alert("Livro atualizado!");
+            } else {
+                await fetch(`${API}/livros`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(livro)
+                });
+                alert("Livro cadastrado!");
+            }
+            
+            document.getElementById("btn-cancelar").click(); 
+            carregarLivros();
+        };
+    </script>
+</body>
+</html>

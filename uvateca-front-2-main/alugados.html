@@ -2,50 +2,87 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uvateca - Meus Aluguéis</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* CSS Específico para os cards */
+        .rented-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .rented-card {
+            background-color: #4b0080; /* Roxo escuro */
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+
+        .rented-card:hover {
+            transform: scale(1.01);
+        }
+
+        .rented-cover {
+            width: 60px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #ccc; 
+        }
+
+        .rented-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .rented-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .rented-status {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Cores dos status */
+        .status-white { color: #ffffff; }
+        .status-red { color: #ff3a54; }   /* Cor de vencido */
+        .status-green { color: #00e676; } /* Cor de devolvido */
+    </style>
 </head>
 <body>
 
-    <header class="main-header">
-        <a href="index.html" class="logo">Uvateca</a>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="categoria.html">Categoria</a></li>
-                <li><a href="about.html">Contato</a></li>
-            </ul>
-        </nav>
-        <div class="user-icon">
-            <a href="#" id="user-icon-btn">
-                <img src="menu.png" alt="Menu do Usuário" class="user-icon-img">
-            </a> 
-        </div>
-    </header>
+    <header class="main-header"><a href="index.html" class="logo">Uvateca</a><div class="user-icon"><a href="#" id="user-icon-btn"><img src="menu.png" class="user-icon-img"></a></div></header>
 
     <aside id="user-sidebar" class="sidebar">
-        
-        <div id="sidebar-logado" class="sidebar-profile" style="display: none;">
-            <img src="perfil.jpeg" alt="Foto do Perfil">
-            <p class="welcome-msg" id="welcome-msg-text">Bem-vindo!</p> 
-        </div>
-
-        <div id="sidebar-deslogado" class="sidebar-profile">
-            <p class="welcome-msg">Você não está logado.</p>
-        </div>
-        
+        <div id="sidebar-logado" class="sidebar-profile" style="display:none;"><img src="perfil.jpeg"><p id="welcome-msg-text"></p></div>
+        <div id="sidebar-deslogado" class="sidebar-profile"><p>Deslogado</p></div>
         <nav class="sidebar-nav">
             <ul>
-                <li id="nav-dashboard" style="display: none;"><a href="dashboard.html">Dashboard</a></li> 
-                <li id="nav-cadastrar-funcionario" style="display: none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> <li id="nav-biblioteca" style="display: none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
-                <li id="nav-cadastrar-usuario" style="display: none;"> <a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
-                <li id="nav-alugados" style="display: none;"><a href="alugados.html">Alugados</a></li>
-                <li id="nav-registrar-livro" style="display: none;"> <a href="cadastro-livro.html">📚 Registrar Livro</a> </li> 
-                <li id="nav-realizar-aluguel" style="display: none;"><a href="alugar-livro.html">🤝 Realizar Aluguel</a></li>
+                <li id="nav-dashboard" style="display:none;"><a href="dashboard.html">Dashboard</a></li> 
+                <li id="nav-cadastrar-funcionario" style="display:none;"><a href="painel-admin.html">Cadastrar Funcionário</a></li> 
+                <li id="nav-cadastrar-usuario" style="display:none;"><a href="cadastro-usuario.html">Cadastrar Usuário</a></li>
+                <li id="nav-registrar-livro" style="display:none;"><a href="cadastro-livro.html">Registrar Livro</a></li>
+                <li id="nav-realizar-aluguel" style="display:none;"><a href="alugar-livro.html">Realizar Aluguel</a></li>
                 
+                <li id="nav-gestao-leitores" style="display:none;"><a href="gestao-leitores.html">👥 Gestão de Leitores</a></li>
+                <li id="nav-acervo" style="display:none;"><a href="gestao-acervo.html">📚 Acervo Bibliográfico</a></li>
+                <li id="nav-gestao-emprestimos" style="display:none;"><a href="gestao-emprestimos.html">🤝 Gestão de Empréstimos</a></li>
+                <li id="nav-gestao-funcionarios" style="display:none;"><a href="gestao-funcionarios.html">👔 Gestão de Funcionários</a></li>
+
+                <li id="nav-biblioteca" style="display:none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
+                <li id="nav-alugados" style="display:none;"><a href="alugados.html">Meus Aluguéis</a></li>
                 <li id="nav-login"><a href="login.html">Login / Entrar</a></li>
-                <li id="nav-logout" style="display: none;"><a href="#">Sair (Logout)</a></li>
+                <li id="nav-logout" style="display:none;"><a href="#">Sair (Logout)</a></li>
             </ul>
         </nav>
     </aside>
@@ -53,41 +90,96 @@
     <main>
         <div class="container">
             <h2>Meus Aluguéis</h2>
-
-            <section class="rented-book-list">
-                <a href="aluguel-detalhe-em-dia.html" class="rented-book-item status-ontime">
-                    <div class="rented-book-cover">
-                        <img src="https://via.placeholder.com/80x120/4B0080/FFFFFF?text=Percy" alt="Capa Percy Jackson">
-                    </div>
-                    <div class="rented-book-info">
-                        <h3>Percy Jackson e o Ladrão de Raios</h3>
-                        <p class="due-date">Vence em: 25/12/2025</p>
-                    </div>
-                </a>
-
-                <a href="aluguel-detalhe-atrasado.html" class="rented-book-item status-overdue">
-                    <div class="rented-book-cover">
-                        <img src="https://via.placeholder.com/80x120/4B0080/FFFFFF?text=Hobbit" alt="Capa O Hobbit">
-                    </div>
-                    <div class="rented-book-info">
-                        <h3>O Hobbit</h3>
-                        <p class="due-date">Venceu dia: 17/09/2025</p>
-                    </div>
-                </a>
-
-                <a href="aluguel-detalhe-devolvido.html" class="rented-book-item status-returned">
-                    <div class="rented-book-cover">
-                        <img src="https://via.placeholder.com/80x120/4B0080/FFFFFF?text=Coraline" alt="Capa Coraline">
-                    </div>
-                    <div class="rented-book-info">
-                        <h3>Coraline</h3>
-                        <p class="due-date">Devolvido em: 13/10/2025</p>
-                    </div>
-                </a>
-            </section>
+            <div id="lista-alugueis" class="rented-list">
+                <p style="color:white">Carregando seus empréstimos...</p>
+            </div>
         </div>
     </main>
 
     <script src="main.js"></script>
+    <script>
+        const API = "http://localhost:8080/api";
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const cpfUsuario = localStorage.getItem("uvatecaCpf");
+
+            if (!cpfUsuario) {
+                document.getElementById("lista-alugueis").innerHTML = "<p style='color:white'>Você precisa fazer login para ver seus aluguéis.</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API}/emprestimos/usuario/${cpfUsuario}`);
+                const emprestimos = await response.json();
+                renderizarAlugueis(emprestimos);
+            } catch (error) {
+                console.error(error);
+                document.getElementById("lista-alugueis").innerHTML = "<p style='color:red'>Erro ao carregar dados.</p>";
+            }
+        });
+
+        function renderizarAlugueis(lista) {
+            const container = document.getElementById("lista-alugueis");
+            container.innerHTML = "";
+
+            if (lista.length === 0) {
+                container.innerHTML = "<p style='color:white'>Você ainda não alugou nenhum livro.</p>";
+                return;
+            }
+
+            lista.forEach(item => {
+                const capa = item.imagem || "https://via.placeholder.com/60x90/CCCCCC/000000?text=Capa";
+                const hoje = new Date();
+                const dataPrevista = new Date(item.dataPrevista);
+                
+                let textoStatus = "";
+                let classeStatus = "";
+
+                // Lógica de Status (Cores e Textos)
+                if (item.status === "DEVOLVIDO") {
+                    // VERDE (Entregue)
+                    const dataReal = item.dataReal ? formatarData(item.dataReal) : "Data desc.";
+                    textoStatus = `Devolvido em: ${dataReal}`;
+                    classeStatus = "status-green";
+                } else {
+                    // Ainda está com o livro
+                    if (hoje > dataPrevista) {
+                        // --- MUDANÇA AQUI: VERMELHO (Atrasado + Aviso) ---
+                        textoStatus = `
+                            Venceu dia: ${formatarData(item.dataPrevista)} <br>
+                            <span style="font-weight: 700; color: #ffcccb; font-size: 0.9rem;">
+                                ⚠️ Entre em contato urgentemente para resolver!
+                            </span>
+                        `;
+                        classeStatus = "status-red";
+                    } else {
+                        // BRANCO (Em dia)
+                        textoStatus = `Vence em: ${formatarData(item.dataPrevista)}`;
+                        classeStatus = "status-white";
+                    }
+                }
+
+                const cardHTML = `
+                    <div class="rented-card">
+                        <img src="${capa}" alt="Capa" class="rented-cover">
+                        <div class="rented-info">
+                            <span class="rented-title">${item.titulo}</span>
+                            <span class="rented-status ${classeStatus}">${textoStatus}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // Função auxiliar para formatar data (yyyy-mm-dd -> dd/mm/yyyy)
+        function formatarData(dataString) {
+            if(!dataString) return "";
+            const data = new Date(dataString);
+            const userTimezoneOffset = data.getTimezoneOffset() * 60000;
+            const dataCorrigida = new Date(data.getTime() + userTimezoneOffset);
+            return dataCorrigida.toLocaleDateString('pt-BR');
+        }
+    </script>
 </body>
 </html>
