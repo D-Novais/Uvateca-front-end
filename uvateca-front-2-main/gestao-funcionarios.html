@@ -18,7 +18,6 @@
                 <li id="nav-gestao-leitores" style="display:none;"><a href="gestao-leitores.html">👥 Gestão de Leitores</a></li>
                 <li id="nav-acervo" style="display:none;"><a href="gestao-acervo.html">📚 Acervo Bibliográfico</a></li>
                 <li id="nav-gestao-emprestimos" style="display:none;"><a href="gestao-emprestimos.html">🤝 Gestão de Empréstimos</a></li>
-                
                 <li id="nav-biblioteca" style="display:none;"><a href="minha-biblioteca.html">Minha Biblioteca</a></li>
                 <li id="nav-alugados" style="display:none;"><a href="alugados.html">Meus Aluguéis</a></li>
                 <li id="nav-login"><a href="login.html">Sair</a></li>
@@ -52,7 +51,7 @@
 
                     <div class="form-group">
                         <label>Cargo</label>
-                        <input type="text" id="cargo" required placeholder="Ex: Bibliotecário, Gerente">
+                        <input type="text" id="cargo" required placeholder="Ex: ADMIN, FUNCIONARIO">
                     </div>
 
                     <div class="form-group">
@@ -68,7 +67,7 @@
             <h3>Funcionários Cadastrados</h3>
             <div style="overflow-x: auto;">
                 <table class="management-table">
-                    <thead><tr><th>Nome</th><th>CPF</th><th>Email</th><th>Cargo</th><th>Ações</th></tr></thead>
+                    <thead><tr><th>Nome</th><th>CPF</th><th>Cargo</th><th>Ações</th></tr></thead>
                     <tbody id="tabela-funcionarios"></tbody>
                 </table>
             </div>
@@ -90,26 +89,43 @@
                 tbody.innerHTML = "";
                 
                 lista.forEach(f => {
+                    // TRUQUE: replace para evitar erro se tiver aspas no nome
+                    const jsonFunc = JSON.stringify(f).replace(/'/g, "&#39;");
+                    
                     tbody.innerHTML += `
                         <tr>
                             <td>${f.nome}</td>
                             <td>${f.cpf}</td>
-                            <td>${f.email}</td>
                             <td>${f.cargo}</td>
                             <td>
-                                <button class="action-btn btn-edit" onclick='prepararEdicao(${JSON.stringify(f)})'>✏️</button>
+                                <button class="action-btn btn-edit" onclick='prepararEdicao(${jsonFunc})'>✏️</button>
                                 <button class="action-btn btn-delete" onclick="excluirFuncionario('${f.cpf}')">🗑️</button>
                             </td>
                         </tr>
                     `;
                 });
-            } catch(e) { console.error("Erro ao carregar funcionários", e); }
+            } catch(e) { 
+                console.error("Erro ao carregar:", e);
+                alert("Erro ao carregar lista. Verifique se o Back-end está rodando.");
+            }
         }
 
         async function excluirFuncionario(cpf) {
-            if(confirm("Tem certeza que deseja remover este funcionário?")) {
-                await fetch(`${API}/funcionarios/${cpf}`, { method: 'DELETE' });
-                carregarFuncionarios();
+            if(!confirm("Tem certeza que deseja remover este funcionário?")) return;
+
+            try {
+                const res = await fetch(`${API}/funcionarios/${cpf}`, { method: 'DELETE' });
+                
+                if (res.ok) {
+                    alert("✅ Funcionário excluído!");
+                    carregarFuncionarios();
+                } else {
+                    const textoErro = await res.text();
+                    alert("❌ Erro do servidor ao excluir: " + textoErro);
+                }
+            } catch (error) {
+                console.error(error);
+                alert("❌ Erro de conexão ao tentar excluir.");
             }
         }
 
@@ -125,7 +141,9 @@
             document.getElementById("cargo").value = func.cargo;
             
             document.getElementById("senha").placeholder = "Digite nova senha para alterar";
-            document.getElementById("senha").required = false;
+            // Senha não é obrigatória na edição (se não quiser mudar)
+            // Mas seu back-end atual exige senha no UPDATE, então mantenha obrigatório ou ajuste o Java
+            document.getElementById("senha").value = func.senha || ""; 
 
             document.getElementById("btn-salvar").innerText = "Atualizar Dados";
             document.getElementById("btn-cancelar").style.display = "inline-block";
@@ -137,8 +155,7 @@
             editando = false;
             document.getElementById("form-title").innerText = "Novo Funcionário";
             document.getElementById("btn-salvar").innerText = "Cadastrar Funcionário";
-            document.getElementById("senha").required = true;
-            this.style.display = "none";
+            document.getElementById("btn-cancelar").style.display = "none";
         };
 
         document.getElementById("form-funcionario").onsubmit = async function(e) {
@@ -152,25 +169,41 @@
                 senha: document.getElementById("senha").value
             };
 
-            if(editando) {
-                const cpfOriginal = document.getElementById("cpfOriginal").value;
-                await fetch(`${API}/funcionarios/${cpfOriginal}`, {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(funcionario)
-                });
-                alert("Funcionário atualizado!");
-            } else {
-                await fetch(`${API}/funcionarios`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(funcionario)
-                });
-                alert("Funcionário cadastrado!");
+            try {
+                if(editando) {
+                    const cpfOriginal = document.getElementById("cpfOriginal").value;
+                    const res = await fetch(`${API}/funcionarios/${cpfOriginal}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(funcionario)
+                    });
+                    
+                    if(res.ok) {
+                        alert("✅ Funcionário atualizado!");
+                        document.getElementById("btn-cancelar").click(); // Reseta
+                        carregarFuncionarios();
+                    } else {
+                        alert("❌ Erro ao atualizar: " + await res.text());
+                    }
+                } else {
+                    const res = await fetch(`${API}/funcionarios`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(funcionario)
+                    });
+                    
+                    if(res.ok) {
+                        alert("✅ Funcionário cadastrado!");
+                        document.getElementById("btn-cancelar").click();
+                        carregarFuncionarios();
+                    } else {
+                        alert("❌ Erro ao cadastrar: " + await res.text());
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                alert("❌ Erro de conexão com o servidor.");
             }
-            
-            document.getElementById("btn-cancelar").click();
-            carregarFuncionarios();
         };
     </script>
 </body>

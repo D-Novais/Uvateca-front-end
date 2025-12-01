@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Uvateca - Gestão de Leitores</title>
     <link rel="stylesheet" href="styles.css">
-    </head>
+</head>
 <body>
     <header class="main-header"><a href="index.html" class="logo">Uvateca</a><div class="user-icon"><a href="#" id="user-icon-btn"><img src="menu.png" class="user-icon-img"></a></div></header>
     
@@ -14,7 +14,6 @@
         <nav class="sidebar-nav">
             <ul>
                 <li id="nav-dashboard" style="display:none;"><a href="dashboard.html">Dashboard</a></li>
-                <li id="nav-gestao-funcionarios" style="display: none;"><a href="gestao-funcionarios.html">👔 Gestão de Funcionários</a></li>
                 <li id="nav-gestao-leitores" style="display:none;"><a href="gestao-leitores.html">👥 Gestão de Leitores</a></li>
                 <li id="nav-acervo" style="display:none;"><a href="gestao-acervo.html">📚 Acervo Bibliográfico</a></li>
                 <li id="nav-gestao-emprestimos" style="display:none;"><a href="gestao-emprestimos.html">🤝 Gestão de Empréstimos</a></li>
@@ -34,6 +33,7 @@
                 <h3 id="form-title">Novo Leitor</h3>
                 <form id="form-usuario">
                     <input type="hidden" id="cpfOriginal"> 
+                    <input type="hidden" id="tipoUsuarioOculto"> 
                     
                     <div class="form-group">
                         <label>Nome Completo</label>
@@ -53,15 +53,6 @@
                     <div class="form-group">
                         <label>Senha</label>
                         <input type="password" id="senha" required placeholder="Senha de acesso">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tipo de Usuário</label>
-                        <select id="tipoUsuario">
-                            <option value="COMUM">Leitor Comum</option>
-                            <option value="FUNCIONARIO">Funcionário</option>
-                            <option value="ADMIN">Administrador</option>
-                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-secondary" id="btn-salvar">Cadastrar Leitor</button>
@@ -94,6 +85,9 @@
                 tbody.innerHTML = "";
                 
                 lista.forEach(u => {
+                    // Truque para aspas
+                    const uJson = JSON.stringify(u).replace(/'/g, "&#39;");
+                    
                     tbody.innerHTML += `
                         <tr>
                             <td>${u.nome}</td>
@@ -101,7 +95,7 @@
                             <td>${u.email}</td>
                             <td>${u.tipoUsuario || 'COMUM'}</td>
                             <td>
-                                <button class="action-btn btn-edit" onclick='prepararEdicao(${JSON.stringify(u)})'>✏️</button>
+                                <button class="action-btn btn-edit" onclick='prepararEdicao(${uJson})'>✏️</button>
                                 <button class="action-btn btn-delete" onclick="excluirUsuario('${u.cpf}')">🗑️</button>
                             </td>
                         </tr>
@@ -111,9 +105,19 @@
         }
 
         async function excluirUsuario(cpf) {
-            if(confirm("Tem certeza que deseja remover este usuário?")) {
-                await fetch(`${API}/usuarios/${cpf}`, { method: 'DELETE' });
-                carregarUsuarios();
+            if(!confirm("Tem certeza que deseja remover este usuário?")) return;
+
+            try {
+                const res = await fetch(`${API}/usuarios/${cpf}`, { method: 'DELETE' });
+                if (res.ok) {
+                    alert("✅ Usuário excluído!");
+                    carregarUsuarios();
+                } else {
+                    const msg = await res.text();
+                    alert("❌ Erro ao excluir: " + msg);
+                }
+            } catch (error) {
+                alert("❌ Erro de conexão ao excluir.");
             }
         }
 
@@ -122,14 +126,18 @@
             document.getElementById("form-title").innerText = "Editando: " + user.nome;
             document.getElementById("cpfOriginal").value = user.cpf;
             
+            document.getElementById("tipoUsuarioOculto").value = user.tipoUsuario || "COMUM";
+            
             document.getElementById("nome").value = user.nome;
             document.getElementById("cpf").value = user.cpf;
             document.getElementById("email").value = user.email;
             document.getElementById("telefone").value = user.telefone;
-            document.getElementById("tipoUsuario").value = user.tipoUsuario || "COMUM";
             
             document.getElementById("senha").placeholder = "Digite nova senha para alterar";
             document.getElementById("senha").required = false;
+            // Opcional: preencher senha atual se o back-end mandar, 
+            // mas por segurança geralmente é melhor deixar vazio.
+            document.getElementById("senha").value = user.senha || ""; 
 
             document.getElementById("btn-salvar").innerText = "Atualizar Dados";
             document.getElementById("btn-cancelar").style.display = "inline-block";
@@ -142,39 +150,58 @@
             document.getElementById("form-title").innerText = "Novo Leitor";
             document.getElementById("btn-salvar").innerText = "Cadastrar Leitor";
             document.getElementById("senha").required = true;
+            document.getElementById("tipoUsuarioOculto").value = ""; 
             this.style.display = "none";
         };
 
         document.getElementById("form-usuario").onsubmit = async function(e) {
             e.preventDefault();
+            
+            const tipoFinal = editando ? document.getElementById("tipoUsuarioOculto").value : "COMUM";
+
             const usuario = {
                 nome: document.getElementById("nome").value,
                 cpf: document.getElementById("cpf").value,
                 email: document.getElementById("email").value,
                 telefone: document.getElementById("telefone").value,
                 senha: document.getElementById("senha").value,
-                tipoUsuario: document.getElementById("tipoUsuario").value
+                tipoUsuario: tipoFinal
             };
 
-            if(editando) {
-                const cpfOriginal = document.getElementById("cpfOriginal").value;
-                await fetch(`${API}/usuarios/${cpfOriginal}`, {
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(usuario)
-                });
-                alert("Usuário atualizado!");
-            } else {
-                await fetch(`${API}/usuarios/cadastro`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(usuario)
-                });
-                alert("Usuário cadastrado!");
+            try {
+                if(editando) {
+                    const cpfOriginal = document.getElementById("cpfOriginal").value;
+                    const res = await fetch(`${API}/usuarios/${cpfOriginal}`, {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(usuario)
+                    });
+                    
+                    if(res.ok) {
+                        alert("✅ Usuário atualizado!");
+                        document.getElementById("btn-cancelar").click();
+                        carregarUsuarios();
+                    } else {
+                        alert("❌ Erro ao atualizar: " + await res.text());
+                    }
+                } else {
+                    const res = await fetch(`${API}/usuarios/cadastro`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(usuario)
+                    });
+                    
+                    if(res.ok) {
+                        alert("✅ Leitor cadastrado!");
+                        document.getElementById("btn-cancelar").click();
+                        carregarUsuarios();
+                    } else {
+                        alert("❌ Erro ao cadastrar: " + await res.text());
+                    }
+                }
+            } catch(e) {
+                alert("❌ Erro de conexão com o servidor.");
             }
-            
-            document.getElementById("btn-cancelar").click();
-            carregarUsuarios();
         };
     </script>
 </body>
